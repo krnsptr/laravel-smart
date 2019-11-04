@@ -40,11 +40,12 @@ class MigrationAnalyzer
 
         foreach ($oldData as $model => $fields) {
             if (isset($newData[$model]) === false) {
-                $deleted[$model] = true;
+                foreach ($oldData[$model] as $fieldName => $data) {
+                    unset($oldData[$model][$fieldName]['belongsTo']);
+                }
+                $deleted[$model] = $this->modelDiff($oldData[$model], $newData[$model] ?? $oldData[$model]);
             }
         }
-
-        //
 
         $result = [];
 
@@ -78,11 +79,9 @@ class MigrationAnalyzer
 
         foreach ($oldFields as $name => $field) {
             if (isset($newFields[$name]) === false) {
-                $deleted[$name] = true;
+                $deleted[$name] = $oldFields[$name];
             }
         }
-
-        //
 
         $result = [];
 
@@ -125,6 +124,10 @@ class MigrationAnalyzer
         }
         if (isset($newField['unsigned'])) {
             $output['unsigned'] = $newField['unsigned'];
+        }
+
+        if (isset($newField['belongsTo'])) {
+            $output['belongsTo'] = $newField['belongsTo'];
         }
 
         if (isset($newField['index']) && !isset($oldField['index'])) {

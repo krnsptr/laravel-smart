@@ -31,6 +31,7 @@ class MigrationGenerator extends Generator
             $this->joinSections([
                 $this->printCreatedModels($data),
                 $this->printUpdatedModels($data),
+                $this->printModelsRelationships($data),
                 $this->printDeletedModels($data),
             ]),
             '}',
@@ -81,6 +82,41 @@ class MigrationGenerator extends Generator
         return $this->joinSections($output);
     }
 
+    protected function printModelsRelationships($data)
+    {
+        $output = [];
+        $modelsData = [];
+
+        if (isset($data['created'])) {
+            $modelsData = array_merge($modelsData, $data['created']);
+        }
+
+        if (isset($data['updated'])) {
+            $modelsData = array_merge($modelsData, $data['updated']);
+        }
+
+        foreach ($modelsData as $model => $fields) {
+            $instance = new $model();
+            $table = $instance->getTable();
+
+            $out = $this->printFieldsRelationships($fields);
+
+            if (!empty($out)) {
+                array_push($output,
+                    "Schema::table('{$table}', function (Blueprint \$table) {",
+                    $out,
+                    '});'
+                );
+            }
+        }
+
+        if (!empty($output)) {
+            array_unshift($output, '// Adding foreign keys');
+        }
+
+        return $output;
+    }
+
     protected function printDeletedModels($data)
     {
         if (!isset($data['deleted'])) {
@@ -94,8 +130,14 @@ class MigrationGenerator extends Generator
             $table = $instance->getTable();
 
             $output[] = [
-                "Schema::drop('{$table}');",
+                "Schema::drop('{$table}');"
             ];
+        }
+
+        if (!empty($output))
+        {
+            array_unshift($output, ['Schema::disableForeignKeyConstraints();']);
+            $output[] = ['Schema::enableForeignKeyConstraints();'];
         }
 
         return $this->joinSections($output);
@@ -114,12 +156,42 @@ class MigrationGenerator extends Generator
         if (isset($fields['updated'])) {
             foreach ($fields['updated'] as $name => $data) {
                 $output[] = $this->printField($name, $data).'->change();';
+                $output += $this->printDropForeign([$name]);
             }
         }
 
         if (isset($fields['deleted'])) {
             foreach ($fields['deleted'] as $name => $field) {
+                $relationships = $this->printFieldDeleteRelationships($name, $field);
+                foreach ($relationships as $out) {
+                    $output[] = $out;
+                }
                 $output[] = "\$table->dropColumn('{$name}');";
+            }
+        }
+
+        return $output;
+    }
+
+    protected function printFieldsRelationShips($fields)
+    {
+        $output = [];
+
+        if (isset($fields['created'])) {
+            foreach ($fields['created'] as $name => $data) {
+                $out = "{$this->printFieldRelationships($name, $data)}";
+                if (!empty($out)) {
+                    $output[] = $out;
+                }
+            }
+        }
+
+        if (isset($fields['updated'])) {
+            foreach ($fields['updated'] as $name => $data) {
+                $out = "{$this->printFieldRelationships($name, $data)}";
+                if (!empty($out)) {
+                    $output[] = $out;
+                }
             }
         }
 
@@ -158,5 +230,43 @@ class MigrationGenerator extends Generator
         array_unshift($args, $name);
 
         return $type.'('.implode(', ', array_map('json_encode', $args)).')';
+    }
+
+    protected function printFieldRelationships($name, $data)
+    {
+        $output = '';
+
+        if (isset($data['belongsTo'])) {
+            $relation = $data['belongsTo'];
+            $otherModel = new $relation['model']();
+            $output .= sprintf("\$table->foreign('%s')->references('%s')->on('%s');", $name, $otherModel->getPrimaryKey(), $otherModel->getTable());
+        }
+
+        return $output;
+    }
+
+    protected function printFieldDeleteRelationships($name, $field)
+    {
+        $foreignKeys = [];
+
+        if (isset($field['belongsTo'])) {
+            $foreignKeys[] = $name;
+        }
+
+        if (!empty($foreignKeys)) {
+            return $this->printDropForeign($foreignKeys);
+        }
+
+        return [];
+    }
+
+    protected function printDropForeign($foreignKeys)
+    {
+        $keys = implode($foreignKeys, '\', \'');
+        return [
+            'Schema::disableForeignKeyConstraints();',
+            "\$table->dropForeign(['{$keys}']);",
+            'Schema::enableForeignKeyConstraints();'
+        ];
     }
 }

@@ -31,6 +31,16 @@ trait SmartModel
         });
     }
 
+    public function getTable()
+    {
+        return $this->table;
+    }
+
+    public function getPrimaryKey()
+    {
+        return $this->primaryKey;
+    }
+
     public function getSmartFields()
     {
         if (!isset(static::$smartFields[static::class])) {
@@ -70,7 +80,21 @@ trait SmartModel
             if ($field->default !== null) {
                 $this->setAttribute($field->name, $field->default);
             }
+
+            if ($field->belongsTo !== null) {
+                $relation = $field->belongsTo;
+                $modelName = static::getShortModelName($relation['model']);
+                $this->{$modelName} = function() use($relation) {
+                    return $this->belongsTo($relation['model'], $relation['foreignKey'], $relation['otherKey']);
+                };
+            }
         }
+    }
+
+    public static function getShortModelName($modelName) {
+        $shortName = explode('\\', $modelName);
+        $shortName = end($shortName);
+        return lcfirst($shortName);
     }
 
     public function setAttribute($key, $value)

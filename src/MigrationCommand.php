@@ -26,14 +26,71 @@ class MigrationCommand extends Command
 
         if ($up && $down) {
             $time = time();
+            $migrationName = $this->getMigrationName($up);
             File::put(
-                database_path('migrations/'.date('Y_m_d_His').'_smart_migration_'.$time.'.php'),
-                $this->generator->print($up, $down, 'SmartMigration'.$time)
+                database_path('migrations/'.date('Y_m_d_His').'_'.$migrationName.'.php'),
+                $this->generator->print($up, $down, $this->snakeToCamelCase($migrationName))
             );
             $this->saveData($newData);
         } else {
             $this->info('No changes.');
         }
+    }
+
+    protected function getMigrationName($up)
+    {
+        $action = null;
+        $actions = [];
+        $models = [];
+
+        if (isset($up['created']))
+        {
+            $actions[] = 'create';
+
+            foreach ($up['created'] as $model => $data) {
+                $models[] = $model;
+            }
+        }
+
+        if (isset($up['updated']))
+        {
+            $actions[] = 'update';
+
+            foreach ($up['updated'] as $model => $data) {
+                $models[] = $model;
+            }
+        }
+
+        if (isset($up['deleted']))
+        {
+            $actions[] = 'delete';
+
+            foreach ($up['deleted'] as $model => $data) {
+                $models[] = $model;
+            }
+        }
+
+        $action = $actions[0] ?? 'smart';
+        if (count($models) == 1) {
+            $model = new $models[0];
+            $table = $model->getTable().'_table';
+        } else {
+            $table = 'migration';
+        }
+
+        return $action.'_'.$table;
+    }
+
+    private function snakeToCamelCase($string, $capitalizeFirstCharacter = true)
+    {
+
+        $str = str_replace(' ', '', ucwords(str_replace('_', ' ', $string)));
+
+        if (!$capitalizeFirstCharacter) {
+            $str[0] = strtolower($str[0]);
+        }
+
+        return $str;
     }
 
     protected function getNewData()

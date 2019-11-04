@@ -27,6 +27,11 @@ class Field
     public $nullable = null;
     public $unsigned = null;
 
+    public $belongsTo = null;
+    public $belongsToMany = null;
+    public $hasOne = null;
+    public $hasMany = null;
+
     public $default = null;
 
     public $uniqueClosure;
@@ -130,6 +135,63 @@ class Field
         return $this;
     }
 
+    public function belongsTo($model, $foreignKey=null, $otherKey=null)
+    {
+        $this->belongsTo = [
+            'model' => $model,
+            'foreignKey' => $foreignKey,
+            'otherKey' => $otherKey
+        ];
+
+        return $this;
+    }
+
+    public function belongsToMany($model, $joinTable, $otherKey, $modelKey)
+    {
+        $this->belongsToMany = [
+            'model' => $model,
+            'joinTable' => $joinTable,
+            'otherKey' => $otherKey,
+            'modelKey' => $modelKey
+        ];
+
+        return $this;
+    }
+
+    /**
+     * @param $model String - Full model name
+     * @param $foreignKey String - Foreign key in the target model
+     * @param $localKey String - The key to use for the foreign key: Ex: code, uuid
+     * @return Field
+     */
+    public function hasOne($model, $foreignKey, $localKey)
+    {
+        $this->hasOne = [
+            'model' => $model,
+            'foreignKey' => $foreignKey,
+            'localKey' => $localKey
+        ];
+
+        return $this;
+    }
+
+    /**
+     * @param $model String - Full model name
+     * @param $foreignKey String - Foreign key in the target model
+     * @param $localKey String - The key to use for the foreign key: Ex: code, uuid
+     * @return Field
+     */
+    public function hasMany($model, $foreignKey, $localKey)
+    {
+        $this->hasMany = [
+            'model' => $model,
+            'foreignKey' => $foreignKey,
+            'localKey' => $localKey
+        ];
+
+        return $this;
+    }
+
     public function validateRawValue()
     {
         $this->validateRawValue = true;
@@ -193,6 +255,10 @@ class Field
         }
         if ($this->unsigned) {
             $output['unsigned'] = $this->unsigned;
+        }
+
+        if ($this->belongsTo) {
+            $output['belongsTo'] = $this->belongsTo;
         }
 
         return $output;
