@@ -31,6 +31,20 @@ trait SmartModel
         });
     }
 
+    public function fields()
+    {
+        $fields = [
+            Field::make('id')->increments()
+        ];
+
+        if ($this->timestamps) {
+            $fields[] = Field::make(static::CREATED_AT)->timestamp()->nullable()->index();
+            $fields[] = Field::make(static::UPDATED_AT)->timestamp()->nullable()->index();
+        }
+
+        return $fields;
+    }
+
     public function getTable()
     {
         return $this->table;
@@ -79,14 +93,6 @@ trait SmartModel
 
             if ($field->default !== null) {
                 $this->setAttribute($field->name, $field->default);
-            }
-
-            if ($field->belongsTo !== null) {
-                $relation = $field->belongsTo;
-                $modelName = static::getShortModelName($relation['model']);
-                $this->{$modelName} = function() use($relation) {
-                    return $this->belongsTo($relation['model'], $relation['foreignKey'], $relation['otherKey']);
-                };
             }
         }
     }
