@@ -97,10 +97,16 @@ trait SmartModel
         }
     }
 
-    public static function getShortModelName($modelName) {
+    public static function getShortModelName($modelName)
+    {
         $shortName = explode('\\', $modelName);
         $shortName = end($shortName);
         return lcfirst($shortName);
+    }
+
+    public function getModelName()
+    {
+        return get_class($this);
     }
 
     public function setAttribute($key, $value)

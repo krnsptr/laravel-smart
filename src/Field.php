@@ -135,24 +135,27 @@ class Field
         return $this;
     }
 
-    public function belongsTo($model, $foreignKey=null, $otherKey=null)
+    public function belongsTo($model)
     {
+        $this->unsignedInteger();
+
+        $relationship = $model->{$this->name}();
         $this->belongsTo = [
-            'model' => $model,
-            'foreignKey' => $foreignKey,
-            'otherKey' => $otherKey
+            'model' => get_class($relationship->getRelated()),
+            'foreignKey' => $relationship->getForeignKeyName()
         ];
 
         return $this;
     }
 
-    public function belongsToMany($model, $joinTable, $otherKey, $modelKey)
+    public function belongsToMany($model)
     {
+        $relationship = $model->{$this->name}();
         $this->belongsToMany = [
-            'model' => $model,
-            'joinTable' => $joinTable,
-            'otherKey' => $otherKey,
-            'modelKey' => $modelKey
+            'model' => get_class($relationship->getRelated()),
+            'joinTable' => $relationship->getTable(),
+            'relatedKey' => $relationship->getRelatedPivotKeyName(),
+            'parentKey' => $relationship->getForeignPivotKeyName()
         ];
 
         return $this;
@@ -229,7 +232,7 @@ class Field
     {
         $output = [];
 
-        if ($this->type === null) {
+        if ($this->type === null && !$this->belongsToMany) {
             throw new Exception("Field `{$this->name}` doesn't have a type.");
         }
 
@@ -259,6 +262,10 @@ class Field
 
         if ($this->belongsTo) {
             $output['belongsTo'] = $this->belongsTo;
+        }
+
+        if ($this->belongsToMany) {
+            $output['belongsToMany'] = $this->belongsToMany;
         }
 
         return $output;

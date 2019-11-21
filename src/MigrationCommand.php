@@ -25,7 +25,6 @@ class MigrationCommand extends Command
         $down = $this->analyzer->diff($newData, $oldData);
 
         if ($up && $down) {
-            $time = time();
             $migrationName = $this->getMigrationName($up);
             File::put(
                 database_path('migrations/'.date('Y_m_d_His').'_'.$migrationName.'.php'),
@@ -71,14 +70,15 @@ class MigrationCommand extends Command
         }
 
         $action = $actions[0] ?? 'smart';
-        if (count($models) == 1) {
-            $model = new $models[0];
-            $table = $model->getTable().'_table';
-        } else {
-            $table = 'migration';
+        $tables = [];
+        foreach($models as $model) {
+            $instance = new $model();
+            $tables[] = $instance->getTable();
         }
 
-        return $action.'_'.$table;
+        $tables[] = count($tables) > 1 ? 'tables' : 'table';
+
+        return $action.'_'.implode('_', $tables);
     }
 
     private function snakeToCamelCase($string, $capitalizeFirstCharacter = true)
