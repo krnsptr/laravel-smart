@@ -26,10 +26,12 @@ class MigrationCommand extends Command
 
         if ($up && $down) {
             $migrationName = $this->getMigrationName($up);
+            $migrationPath = 'migrations/'.date('Y_m_d_His').'_'.$migrationName.'.php';
             File::put(
-                database_path('migrations/'.date('Y_m_d_His').'_'.$migrationName.'.php'),
+                database_path($migrationPath),
                 $this->generator->print($up, $down, $this->snakeToCamelCase($migrationName))
             );
+            $newData['last_migration'] = $migrationPath;
             $this->saveData($newData);
         } else {
             $this->info('No changes.');
@@ -78,7 +80,6 @@ class MigrationCommand extends Command
 
     private function snakeToCamelCase($string, $capitalizeFirstCharacter = true)
     {
-
         $str = str_replace(' ', '', ucwords(str_replace('_', ' ', $string)));
 
         if (!$capitalizeFirstCharacter) {
@@ -101,8 +102,9 @@ class MigrationCommand extends Command
 
         if (File::exists($path)) {
             $content = File::get($path);
-
-            return json_decode($content, true);
+            $json = json_decode($content, true);
+            unset($json['last_migration']);
+            return $json;
         }
 
         return [];
@@ -112,6 +114,11 @@ class MigrationCommand extends Command
     {
         $path = database_path('smart.json');
         $content = json_encode($data, JSON_PRETTY_PRINT);
+
+        if (file_exists($path))
+        {
+            rename($path, database_path('smart.json.old'));
+        }
 
         File::put($path, $content);
     }

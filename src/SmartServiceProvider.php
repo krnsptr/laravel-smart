@@ -12,6 +12,7 @@ class SmartServiceProvider extends ServiceProvider
             $this->commands([
                 ModelCommand::class,
                 MigrationCommand::class,
+                RollbackCommand::class,
             ]);
         }
     }
