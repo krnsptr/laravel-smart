@@ -4,20 +4,47 @@ namespace Deiucanta\Smart;
 
 class MigrationAnalyzer
 {
-    public function scan($models)
+    /**
+     * @param array $baseModels Models from configuration
+     * @return array Models including join models generated using $baseModels
+     */
+    public function scan($baseModels)
     {
         $data = [];
+        foreach ($baseModels as $baseModel) {
+            $instance = new $baseModel();
+            $tableName = $instance->getTable();
+            $data[$tableName] = [
+                'model' => get_class($instance),
+                'modelArgs' => [],
+                'fields' => $this->getFieldsWithSchemaData($instance)
+            ];
 
-        foreach ($models as $model) {
-            $data[$model] = [];
-
-            $instance = new $model();
+            // Add JoinModels to data
             $fields = $instance->getSmartFields();
-
             foreach ($fields as $field) {
-                $name = $field->name;
-                $data[$model][$name] = $field->getSchemaData();
+                if ($field->belongsToMany) {
+                    $joinModel = new JoinModel($field->belongsToMany);
+                    $data[$joinModel->getTable()] = [
+                        'model' => get_class($joinModel),
+                        'modelArgs' => $field->belongsToMany,
+                        'fields' => $this->getFieldsWithSchemaData($joinModel)
+                    ];
+                    unset($data[$tableName]['fields'][$field->name]);
+                }
             }
+        }
+
+        return $data;
+    }
+
+    protected function getFieldsWithSchemaData($model)
+    {
+        $data = [];
+        $fields = $model->getSmartFields();
+        foreach ($fields as $field) {
+            $fieldName = $field->name;
+            $data[$fieldName] = $field->getSchemaData();
         }
 
         return $data;
@@ -27,23 +54,24 @@ class MigrationAnalyzer
     {
         $created = $updated = $deleted = [];
 
-        foreach ($newData as $model => $fields) {
-            if (isset($oldData[$model]) === false) {
-                $created[$model] = $this->modelDiff([], $fields);
+        foreach ($newData as $table => $modelData) {
+            if (isset($oldData[$table]) === false) {
+                $created[$table] = $this->modelDiff([], $modelData['fields']);
             } else {
-                $diff = $this->modelDiff($oldData[$model], $newData[$model]);
+                $diff = $this->modelDiff($oldData[$table]['fields'], $newData[$table]['fields']);
                 if ($diff) {
-                    $updated[$model] = $diff;
+                    $updated[$table] = $diff;
                 }
             }
         }
 
-        foreach ($oldData as $model => $fields) {
-            if (isset($newData[$model]) === false) {
-                foreach ($oldData[$model] as $fieldName => $data) {
-                    unset($oldData[$model][$fieldName]['belongsTo']);
+        foreach ($oldData as $table => $modelData) {
+            if (isset($newData[$table]) === false) {
+                foreach ($oldData[$table]['fields'] as $fieldName => $data) {
+                    unset($oldData[$table]['fields'][$fieldName]['belongsTo']);
+                    unset($oldData[$table]['fields'][$fieldName]['belongsToMany']);
                 }
-                $deleted[$model] = $this->modelDiff($oldData[$model], $newData[$model] ?? $oldData[$model]);
+                $deleted[$table] = $this->modelDiff($oldData[$table]['fields'], $newData[$table]['fields'] ?? $oldData[$table]['fields']);
             }
         }
 

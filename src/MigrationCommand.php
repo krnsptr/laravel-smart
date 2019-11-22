@@ -40,14 +40,14 @@ class MigrationCommand extends Command
     {
         $action = null;
         $actions = [];
-        $models = [];
+        $tables = [];
 
         if (isset($up['created']))
         {
             $actions[] = 'create';
 
-            foreach ($up['created'] as $model => $data) {
-                $models[] = $model;
+            foreach ($up['created'] as $table => $modelData) {
+                $tables[] = $table;
             }
         }
 
@@ -55,8 +55,8 @@ class MigrationCommand extends Command
         {
             $actions[] = 'update';
 
-            foreach ($up['updated'] as $model => $data) {
-                $models[] = $model;
+            foreach ($up['updated'] as $table => $modelData) {
+                $tables[] = $table;
             }
         }
 
@@ -64,17 +64,12 @@ class MigrationCommand extends Command
         {
             $actions[] = 'delete';
 
-            foreach ($up['deleted'] as $model => $data) {
-                $models[] = $model;
+            foreach ($up['deleted'] as $table => $modelData) {
+                $tables[] = $table;
             }
         }
 
         $action = $actions[0] ?? 'smart';
-        $tables = [];
-        foreach($models as $model) {
-            $instance = new $model();
-            $tables[] = $instance->getTable();
-        }
 
         $tables[] = count($tables) > 1 ? 'tables' : 'table';
 

@@ -46,10 +46,7 @@ class MigrationGenerator extends Generator
 
         $output = [];
 
-        foreach ($data['created'] as $model => $fields) {
-            $instance = new $model();
-            $table = $instance->getTable();
-
+        foreach ($data['created'] as $table => $fields) {
             $output[] = [
                 "Schema::create('{$table}', function (Blueprint \$table) {",
                 $this->printFields($fields),
@@ -68,10 +65,7 @@ class MigrationGenerator extends Generator
 
         $output = [];
 
-        foreach ($data['updated'] as $model => $fields) {
-            $instance = new $model();
-            $table = $instance->getTable();
-
+        foreach ($data['updated'] as $table => $fields) {
             $output[] = [
                 "Schema::table('{$table}', function (Blueprint \$table) {",
                 $this->printFields($fields),
@@ -95,10 +89,7 @@ class MigrationGenerator extends Generator
             $modelsData = array_merge($modelsData, $data['updated']);
         }
 
-        foreach ($modelsData as $model => $fields) {
-            $instance = new $model();
-            $table = $instance->getTable();
-
+        foreach ($modelsData as $table => $fields) {
             $out = $this->printFieldsRelationships($fields);
 
             if (!empty($out)) {
@@ -125,10 +116,7 @@ class MigrationGenerator extends Generator
 
         $output = [];
 
-        foreach ($data['deleted'] as $model => $fields) {
-            $instance = new $model();
-            $table = $instance->getTable();
-
+        foreach ($data['deleted'] as $table => $fields) {
             $output[] = [
                 "Schema::drop('{$table}');"
             ];

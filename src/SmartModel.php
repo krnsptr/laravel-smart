@@ -97,6 +97,11 @@ trait SmartModel
         }
     }
 
+    public static function make($modelData)
+    {
+        return new $modelData['model']($modelData['modelArgs']);
+    }
+
     public static function getShortModelName($modelName)
     {
         $shortName = explode('\\', $modelName);

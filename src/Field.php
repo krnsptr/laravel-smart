@@ -152,7 +152,8 @@ class Field
     {
         $relationship = $model->{$this->name}();
         $this->belongsToMany = [
-            'model' => get_class($relationship->getRelated()),
+            'parentModel' => get_class($model),
+            'relatedModel' => get_class($relationship->getRelated()),
             'joinTable' => $relationship->getTable(),
             'relatedKey' => $relationship->getRelatedPivotKeyName(),
             'parentKey' => $relationship->getForeignPivotKeyName()
