@@ -26,12 +26,10 @@ class MigrationCommand extends Command
 
         if ($up && $down) {
             $migrationName = $this->getMigrationName($up);
-            $migrationPath = 'migrations/'.date('Y_m_d_His').'_'.$migrationName.'.php';
             File::put(
-                database_path($migrationPath),
+                database_path('migrations/'.date('Y_m_d_His').'_'.$migrationName.'.php'),
                 $this->generator->print($up, $down, $this->snakeToCamelCase($migrationName))
             );
-            $newData['last_migration'] = $migrationPath;
             $this->saveData($newData);
         } else {
             $this->info('No changes.');
@@ -102,9 +100,7 @@ class MigrationCommand extends Command
 
         if (File::exists($path)) {
             $content = File::get($path);
-            $json = json_decode($content, true);
-            unset($json['last_migration']);
-            return $json;
+            return json_decode($content, true);
         }
 
         return [];
