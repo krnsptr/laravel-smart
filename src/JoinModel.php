@@ -40,11 +40,11 @@ class JoinModel extends Model
     {
         if ($name === $this->smartRelationship['parentKey'])
         {
-            return $this->belongsTo($this->smartRelationship['parentModel']);
+            return $this->belongsTo($this->smartRelationship['parentModel'], $this->smartRelationship['parentKey']);
         }
         else if ($name === $this->smartRelationship['relatedKey'])
         {
-            return $this->belongsTo($this->smartRelationship['relatedModel']);
+            return $this->belongsTo($this->smartRelationship['relatedModel'], $this->smartRelationship['relatedKey']);
         }
         return null;
     }
