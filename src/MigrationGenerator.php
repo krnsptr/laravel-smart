@@ -189,6 +189,11 @@ class MigrationGenerator extends Generator
     protected function printField($name, $data)
     {
         $args = isset($data['typeArgs']) ? $data['typeArgs'] : [];
+
+        if (isset($data['belongsTo'])) {
+            $data['type'] = $data['belongsTo']['foreignKey'];
+        }
+
         $output = '$table->'.$this->printFieldType($data['type'], $name, $args);
 
         if (isset($data['index'])) {
@@ -227,7 +232,7 @@ class MigrationGenerator extends Generator
         if (isset($data['belongsTo'])) {
             $relation = $data['belongsTo'];
             $otherModel = new $relation['model']();
-            $output .= sprintf("\$table->foreign('%s')->references('%s')->on('%s');", $name, $otherModel->getPrimaryKey(), $otherModel->getTable());
+            $output .= sprintf("\$table->foreign('%s')->references('%s')->on('%s');", $relation['foreignKey'], $otherModel->getPrimaryKey(), $otherModel->getTable());
         }
 
         return $output;
