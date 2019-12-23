@@ -191,7 +191,7 @@ class MigrationGenerator extends Generator
         $args = isset($data['typeArgs']) ? $data['typeArgs'] : [];
 
         if (isset($data['belongsTo'])) {
-            $data['type'] = $data['belongsTo']['foreignKey'];
+            $name = $data['belongsTo']['foreignKey'];
         }
 
         $output = '$table->'.$this->printFieldType($data['type'], $name, $args);
