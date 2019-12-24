@@ -29,8 +29,9 @@ class Field
 
     public $belongsTo = null;
     public $belongsToMany = null;
-    public $hasOne = null;
-    public $hasMany = null;
+
+    public $mysqlInserted = null;
+    public $mysqlUpdated = null;
 
     public $default = null;
 
@@ -135,6 +136,20 @@ class Field
         return $this;
     }
 
+    public function mysqlInserted()
+    {
+        $this->mysqlInserted = true;
+
+        return $this;
+    }
+
+    public function mysqlUpdated()
+    {
+        $this->mysqlUpdated = true;
+
+        return $this;
+    }
+
     public function belongsTo($model)
     {
         $this->unsignedInteger();
@@ -157,40 +172,6 @@ class Field
             'joinTable' => $relationship->getTable(),
             'relatedKey' => $relationship->getRelatedPivotKeyName(),
             'parentKey' => $relationship->getForeignPivotKeyName()
-        ];
-
-        return $this;
-    }
-
-    /**
-     * @param $model String - Full model name
-     * @param $foreignKey String - Foreign key in the target model
-     * @param $localKey String - The key to use for the foreign key: Ex: code, uuid
-     * @return Field
-     */
-    public function hasOne($model, $foreignKey, $localKey)
-    {
-        $this->hasOne = [
-            'model' => $model,
-            'foreignKey' => $foreignKey,
-            'localKey' => $localKey
-        ];
-
-        return $this;
-    }
-
-    /**
-     * @param $model String - Full model name
-     * @param $foreignKey String - Foreign key in the target model
-     * @param $localKey String - The key to use for the foreign key: Ex: code, uuid
-     * @return Field
-     */
-    public function hasMany($model, $foreignKey, $localKey)
-    {
-        $this->hasMany = [
-            'model' => $model,
-            'foreignKey' => $foreignKey,
-            'localKey' => $localKey
         ];
 
         return $this;
@@ -267,6 +248,14 @@ class Field
 
         if ($this->belongsToMany) {
             $output['belongsToMany'] = $this->belongsToMany;
+        }
+
+        if ($this->mysqlInserted) {
+            $output['mysqlInserted'] = $this->mysqlInserted;
+        }
+
+        if ($this->mysqlUpdated) {
+            $output['mysqlUpdated'] = $this->mysqlUpdated;
         }
 
         return $output;

@@ -214,6 +214,12 @@ class MigrationGenerator extends Generator
         if (isset($data['nullable'])) {
             $output .= '->nullable('.json_encode($data['nullable']).')';
         }
+        if (isset($data['mysqlInserted'])) {
+            $output .= '->useCurrent()';
+        }
+        if(isset($data['mysqlUpdated'])) {
+            $output .= "->default(\DB::raw('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'))";
+        }
 
         return $output;
     }
