@@ -144,7 +144,10 @@ class MigrationGenerator extends Generator
         if (isset($fields['updated'])) {
             foreach ($fields['updated'] as $name => $data) {
                 $output[] = $this->printField($name, $data).'->change();';
-                $output += $this->printDropForeign([$name]);
+
+                if (isset($data['belongsTo'])) {
+                    $output += $this->printDropForeign([$name]);
+                }
             }
         }
 
