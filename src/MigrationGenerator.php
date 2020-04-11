@@ -146,7 +146,7 @@ class MigrationGenerator extends Generator
                 $output[] = $this->printField($name, $data).'->change();';
 
                 if (isset($data['belongsTo'])) {
-                    $output += $this->printDropForeign([$name], $fields["connection"]);
+                    $output = array_merge($output, $this->printDropForeign([$data['belongsTo']['foreignKey']], $fields["connection"]));
                 }
             }
         }
@@ -252,7 +252,7 @@ class MigrationGenerator extends Generator
         $foreignKeys = [];
 
         if (isset($field['belongsTo'])) {
-            $foreignKeys[] = $name;
+            $foreignKeys[] = $field['belongsTo']['foreignKey'];
         }
 
         if (!empty($foreignKeys)) {
@@ -265,9 +265,10 @@ class MigrationGenerator extends Generator
     protected function printDropForeign($foreignKeys, $connection)
     {
         $keys = implode($foreignKeys, '\', \'');
+
         return [
             "Schema::connection('{$connection}')->disableForeignKeyConstraints();",
-            "Schema::connection('{$connection}')->dropForeign('{$table}');",
+            "\$table->dropForeign(['{$keys}']);",
             "Schema::connection('{$connection}')->enableForeignKeyConstraints();"
         ];
     }
