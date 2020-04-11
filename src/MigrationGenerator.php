@@ -23,8 +23,12 @@ class MigrationGenerator extends Generator
         ]);
     }
 
+    /**
+     * Array $data Array that represents the models to migrate
+     */
     protected function printMethod($name, $data)
     {
+        // $data => ["created" => $table => ["created" => ["field_1" => ["type" => "increments"]], ..., "connection" => "db_api"]
         return [
             "public function {$name}()",
             '{',
@@ -48,7 +52,7 @@ class MigrationGenerator extends Generator
 
         foreach ($data['created'] as $table => $fields) {
             $output[] = [
-                "Schema::create('{$table}', function (Blueprint \$table) {",
+                "Schema::connection('{$fields['connection']}')->create('{$table}', function (Blueprint \$table) {",
                 $this->printFields($fields),
                 '});',
             ];
@@ -67,7 +71,7 @@ class MigrationGenerator extends Generator
 
         foreach ($data['updated'] as $table => $fields) {
             $output[] = [
-                "Schema::table('{$table}', function (Blueprint \$table) {",
+                "Schema::connection('{$fields['connection']}')->table('{$table}', function (Blueprint \$table) {",
                 $this->printFields($fields),
                 '});',
             ];
@@ -94,7 +98,7 @@ class MigrationGenerator extends Generator
 
             if (!empty($out)) {
                 array_push($output,
-                    "Schema::table('{$table}', function (Blueprint \$table) {",
+                    "Schema::connection('{$fields['connection']}')->table('{$table}', function (Blueprint \$table) {",
                     $out,
                     '});'
                 );
@@ -118,14 +122,10 @@ class MigrationGenerator extends Generator
 
         foreach ($data['deleted'] as $table => $fields) {
             $output[] = [
-                "Schema::drop('{$table}');"
+                "Schema::connection('{$fields['connection']}')->disableForeignKeyConstraints();",
+                "Schema::connection('{$fields['connection']}')->drop('{$table}');",
+                "Schema::connection('{$fields['connection']}')->enableForeignKeyConstraints();"
             ];
-        }
-
-        if (!empty($output))
-        {
-            array_unshift($output, ['Schema::disableForeignKeyConstraints();']);
-            $output[] = ['Schema::enableForeignKeyConstraints();'];
         }
 
         return $this->joinSections($output);
@@ -146,14 +146,14 @@ class MigrationGenerator extends Generator
                 $output[] = $this->printField($name, $data).'->change();';
 
                 if (isset($data['belongsTo'])) {
-                    $output += $this->printDropForeign([$name]);
+                    $output += $this->printDropForeign([$name], $fields["connection"]);
                 }
             }
         }
 
         if (isset($fields['deleted'])) {
             foreach ($fields['deleted'] as $name => $field) {
-                $relationships = $this->printFieldDeleteRelationships($name, $field);
+                $relationships = $this->printFieldDeleteRelationships($name, $field, $fields["connection"]);
                 foreach ($relationships as $out) {
                     $output[] = $out;
                 }
@@ -208,6 +208,9 @@ class MigrationGenerator extends Generator
         if (isset($data['default'])) {
             $output .= '->default('.json_encode($data['default']).')';
         }
+        if(isset($data['rawDefault'])) {
+            $output .= '->default('.$data['rawDefault'].')';
+        }
         if (isset($data['primary'])) {
             $output .= '->primary('.json_encode($data['primary']).')';
         }
@@ -217,11 +220,8 @@ class MigrationGenerator extends Generator
         if (isset($data['nullable'])) {
             $output .= '->nullable('.json_encode($data['nullable']).')';
         }
-        if (isset($data['mysqlInserted'])) {
+        if (isset($data['useCurrent'])) {
             $output .= '->useCurrent()';
-        }
-        if(isset($data['mysqlUpdated'])) {
-            $output .= "->default(\DB::raw('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'))";
         }
 
         return $output;
@@ -247,7 +247,7 @@ class MigrationGenerator extends Generator
         return $output;
     }
 
-    protected function printFieldDeleteRelationships($name, $field)
+    protected function printFieldDeleteRelationships($name, $field, $connection)
     {
         $foreignKeys = [];
 
@@ -256,19 +256,19 @@ class MigrationGenerator extends Generator
         }
 
         if (!empty($foreignKeys)) {
-            return $this->printDropForeign($foreignKeys);
+            return $this->printDropForeign($foreignKeys, $connection);
         }
 
         return [];
     }
 
-    protected function printDropForeign($foreignKeys)
+    protected function printDropForeign($foreignKeys, $connection)
     {
         $keys = implode($foreignKeys, '\', \'');
         return [
-            'Schema::disableForeignKeyConstraints();',
-            "\$table->dropForeign(['{$keys}']);",
-            'Schema::enableForeignKeyConstraints();'
+            "Schema::connection('{$connection}')->disableForeignKeyConstraints();",
+            "Schema::connection('{$connection}')->dropForeign('{$table}');",
+            "Schema::connection('{$connection}')->enableForeignKeyConstraints();"
         ];
     }
 }

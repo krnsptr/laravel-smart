@@ -17,6 +17,7 @@ class MigrationAnalyzer
             $data[$tableName] = [
                 'model' => get_class($instance),
                 'modelArgs' => [],
+                'modelConnection' => $instance->getConnectionName(),
                 'fields' => $this->getFieldsWithSchemaData($instance)
             ];
 
@@ -28,6 +29,7 @@ class MigrationAnalyzer
                     $data[$joinModel->getTable()] = [
                         'model' => get_class($joinModel),
                         'modelArgs' => $field->belongsToMany,
+                        'modelConnection' => $instance->getConnectionName(),
                         'fields' => $this->getFieldsWithSchemaData($joinModel)
                     ];
                     unset($data[$tableName]['fields'][$field->name]);
@@ -57,10 +59,12 @@ class MigrationAnalyzer
         foreach ($newData as $table => $modelData) {
             if (isset($oldData[$table]) === false) {
                 $created[$table] = $this->modelDiff([], $modelData['fields']);
+                $created[$table]['connection'] = $modelData["modelConnection"];
             } else {
                 $diff = $this->modelDiff($oldData[$table]['fields'], $newData[$table]['fields']);
                 if ($diff) {
                     $updated[$table] = $diff;
+                    $updated[$table]['connection'] = $modelData["modelConnection"];
                 }
             }
         }
@@ -72,6 +76,7 @@ class MigrationAnalyzer
                     unset($oldData[$table]['fields'][$fieldName]['belongsToMany']);
                 }
                 $deleted[$table] = $this->modelDiff($oldData[$table]['fields'], $newData[$table]['fields'] ?? $oldData[$table]['fields']);
+                $deleted[$table]['connection'] = $modelData["modelConnection"];
             }
         }
 
@@ -147,6 +152,9 @@ class MigrationAnalyzer
         if (isset($newField['default'])) {
             $output['default'] = $newField['default'];
         }
+        if (isset($newField['rawDefault'])) {
+            $output['rawDefault'] = $newField['rawDefault'];
+        }
         if (isset($newField['nullable'])) {
             $output['nullable'] = $newField['nullable'];
         }
@@ -177,6 +185,13 @@ class MigrationAnalyzer
         }
         if (!isset($newField['primary']) && isset($oldField['primary'])) {
             $output['primary'] = false;
+        }
+
+        if (isset($newField['useCurrent']) && !isset($oldField['useCurrent'])) {
+            $output['useCurrent'] = true;
+        }
+        if (!isset($newField['useCurrent']) && isset($oldField['useCurrent'])) {
+            $output['useCurrent'] = false;
         }
 
         return $output;

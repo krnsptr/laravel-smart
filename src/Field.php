@@ -30,8 +30,8 @@ class Field
     public $belongsTo = null;
     public $belongsToMany = null;
 
-    public $mysqlInserted = null;
-    public $mysqlUpdated = null;
+    public $useCurrent = null;
+    public $rawDefault = null;
 
     public $default = null;
 
@@ -136,16 +136,16 @@ class Field
         return $this;
     }
 
-    public function mysqlInserted()
+    public function useCurrent()
     {
-        $this->mysqlInserted = true;
+        $this->useCurrent = true;
 
         return $this;
     }
 
-    public function mysqlUpdated()
+    public function rawDefault($rawValue)
     {
-        $this->mysqlUpdated = true;
+        $this->rawDefault = $rawValue;
 
         return $this;
     }
@@ -235,6 +235,10 @@ class Field
             $output['default'] = $this->default;
         }
 
+        if ($this->rawDefault) {
+            $output['rawDefault'] = $this->rawDefault;
+        }
+
         if ($this->nullable) {
             $output['nullable'] = $this->nullable;
         }
@@ -250,12 +254,8 @@ class Field
             $output['belongsToMany'] = $this->belongsToMany;
         }
 
-        if ($this->mysqlInserted) {
-            $output['mysqlInserted'] = $this->mysqlInserted;
-        }
-
-        if ($this->mysqlUpdated) {
-            $output['mysqlUpdated'] = $this->mysqlUpdated;
+        if ($this->useCurrent) {
+            $output['useCurrent'] = $this->useCurrent;
         }
 
         return $output;
