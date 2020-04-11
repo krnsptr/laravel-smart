@@ -70,10 +70,10 @@ class MigrationCommand extends Command
         }
 
         $action = $actions[0] ?? 'smart';
-
         $tables[] = count($tables) > 1 ? 'tables' : 'table';
+        $time = time();
 
-        return $action.'_'.implode('_', $tables);
+        return $action.'_'.implode('_', array_slice($tables, 0, 5)).'_'.$time;
     }
 
     private function snakeToCamelCase($string, $capitalizeFirstCharacter = true)
