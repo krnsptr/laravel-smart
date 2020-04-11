@@ -6,7 +6,7 @@ use Deiucanta\Smart\ModelGenerator;
 
 class ModelGeneratorTest extends TestCase
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
     }

@@ -9,7 +9,7 @@ use Illuminate\Validation\ValidationException;
 
 class ModelTest extends TestCase
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
     }

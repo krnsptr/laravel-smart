@@ -6,7 +6,7 @@ use Deiucanta\Smart\Tests\Models\User;
 
 class AuthenticableTest extends TestCase
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
     }

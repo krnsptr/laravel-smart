@@ -6,7 +6,7 @@ use Deiucanta\Smart\MigrationGenerator;
 
 class MigrationGeneratorTest extends TestCase
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
     }

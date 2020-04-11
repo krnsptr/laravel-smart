@@ -7,7 +7,7 @@ use Deiucanta\Smart\Tests\Models\OhRule;
 
 class FieldRulesTest extends TestCase
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
     }
