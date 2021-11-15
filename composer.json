@@ -1,5 +1,5 @@
 {
-  "name": "vleroy/smart",
+  "name": "krnsptr/laravel-smart",
   "description": "Laravel Smart",
   "license": "MIT",
   "authors": [
@@ -10,6 +10,10 @@
     {
       "name": "Valentin LEROY",
       "email": "contact@vleroy.fr"
+    },
+    {
+      "name": "Kurnia Saputra",
+      "email": "krnsptr@gmail.com"
     }
   ],
   "minimum-stability": "dev",
