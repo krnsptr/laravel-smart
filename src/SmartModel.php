@@ -45,11 +45,6 @@ trait SmartModel
         return $fields;
     }
 
-    public function getTable()
-    {
-        return $this->table;
-    }
-
     public function getPrimaryKey()
     {
         return $this->primaryKey;
