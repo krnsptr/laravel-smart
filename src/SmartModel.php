@@ -83,6 +83,14 @@ trait SmartModel
                 $this->guarded[] = $field->name;
             }
 
+            if ($field->hidden === true) {
+                $this->hidden[] = $field->name;
+            }
+
+            if ($field->visible === true) {
+                $this->visible[] = $field->name;
+            }
+
             if ($field->cast !== null) {
                 $this->casts[$field->name] = $field->cast;
             }

@@ -104,6 +104,8 @@ These are the primitives with which you should be able to create any kind of fie
 | `rule($rule)` | Add a validation rule (Laravel format) |
 | `guarded()` | Make the field guarded |
 | `fillable()` | Make the field fillable |
+| `hidden()` | Make the field hidden |
+| `visible()` | Make the field visible |
 | `index()` | Add a simple index on this field in migrations |
 | `unique($where_closure = null)` | Add a unique index in migrations and a smart validation rule that ignores the current model id |
 | `primary()` | Add a primary key on this field in migrations |

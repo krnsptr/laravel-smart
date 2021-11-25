@@ -20,6 +20,8 @@ class Field
 
     public $guarded = false;
     public $fillable = false;
+    public $hidden = false;
+    public $visible = false;
     public $label = null;
 
     public $index = null;
@@ -81,6 +83,20 @@ class Field
     public function fillable()
     {
         $this->fillable = true;
+
+        return $this;
+    }
+
+    public function hidden()
+    {
+        $this->hidden = true;
+
+        return $this;
+    }
+
+    public function visible()
+    {
+        $this->visible = true;
 
         return $this;
     }
