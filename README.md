@@ -123,9 +123,9 @@ These are Laravel types that are currently supported.
 | `binary()` | `binary` | - | - |
 | `boolean()` | `boolean` | `boolean` | `boolean` |
 | `char($size = null)` | `char` | - | `string\|max:$size` |
-| `date()` | `date` | `date` | - |
-| `dateTime()` | `dateTime` | `datetime` | - |
-| `dateTimeTz()` | `dateTimeTz` | `datetime` | - |
+| `date()` | `date` | `date` | `date` |
+| `dateTime()` | `dateTime` | `datetime` | `date` |
+| `dateTimeTz()` | `dateTimeTz` | `datetime` | `date` |
 | `decimal($total, $decimal)` | `decimal` | `double` | `numeric` |
 | `double($total, $decimal)` | `double` | `double` | `numeric` |
 | `enum($values)` | `enum` | - | `in:value1,value2,...` |

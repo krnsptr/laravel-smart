@@ -32,17 +32,17 @@ trait FieldTypes
 
     public function date()
     {
-        return $this->type('date')->cast('date')->rule;
+        return $this->type('date')->cast('date')->rule('date');
     }
 
     public function dateTime()
     {
-        return $this->type('dateTime')->cast('datetime')->rule;
+        return $this->type('dateTime')->cast('datetime')->rule('date');
     }
 
     public function dateTimeTz()
     {
-        return $this->type('dateTimeTz')->cast('datetime')->rule;
+        return $this->type('dateTimeTz')->cast('datetime')->rule('date');
     }
 
     public function decimal($total, $decimal)
