@@ -11,7 +11,7 @@ trait FieldTypes
 
     public function bigInteger()
     {
-        return $this->type('bigInteger')->cast('integer')->rule('numeric');
+        return $this->type('bigInteger')->cast('integer')->rule('integer');
     }
 
     public function binary()
@@ -81,7 +81,7 @@ trait FieldTypes
 
     public function integer()
     {
-        return $this->type('integer')->cast('integer')->rule('numeric');
+        return $this->type('integer')->cast('integer')->rule('integer');
     }
 
     public function ipAddress()
@@ -121,7 +121,7 @@ trait FieldTypes
 
     public function mediumInteger()
     {
-        return $this->type('mediumInteger')->cast('integer')->rule('numeric');
+        return $this->type('mediumInteger')->cast('integer')->rule('integer');
     }
 
     public function mediumText()
@@ -166,7 +166,7 @@ trait FieldTypes
 
     public function smallInteger()
     {
-        return $this->type('smallInteger')->cast('integer')->rule('numeric');
+        return $this->type('smallInteger')->cast('integer')->rule('integer');
     }
 
     public function softDeletes()
@@ -226,12 +226,12 @@ trait FieldTypes
 
     public function tinyInteger()
     {
-        return $this->type('tinyInteger')->cast('integer')->rule('numeric');
+        return $this->type('tinyInteger')->cast('integer')->rule('integer');
     }
 
     public function unsignedBigInteger()
     {
-        return $this->type('unsignedBigInteger')->cast('integer')->rule('numeric');
+        return $this->type('unsignedBigInteger')->cast('integer')->rule('integer');
     }
 
     public function unsignedDecimal($total, $decimal)
@@ -241,22 +241,22 @@ trait FieldTypes
 
     public function unsignedInteger()
     {
-        return $this->type('unsignedInteger')->cast('integer')->rule('numeric');
+        return $this->type('unsignedInteger')->cast('integer')->rule('integer');
     }
 
     public function unsignedMediumInteger()
     {
-        return $this->type('unsignedMediumInteger')->cast('integer')->rule('numeric');
+        return $this->type('unsignedMediumInteger')->cast('integer')->rule('integer');
     }
 
     public function unsignedSmallInteger()
     {
-        return $this->type('unsignedSmallInteger')->cast('integer')->rule('numeric');
+        return $this->type('unsignedSmallInteger')->cast('integer')->rule('integer');
     }
 
     public function unsignedTinyInteger()
     {
-        return $this->type('unsignedTinyInteger')->cast('integer')->rule('numeric');
+        return $this->type('unsignedTinyInteger')->cast('integer')->rule('integer');
     }
 
     public function uuid()
@@ -266,7 +266,7 @@ trait FieldTypes
 
     public function year()
     {
-        return $this->type('year')->cast('integer')->rule('numeric');
+        return $this->type('year')->cast('integer')->rule('integer');
     }
 
     // extra

@@ -119,7 +119,7 @@ These are Laravel types that are currently supported.
 | Method | Type | Cast | Rule |
 | - | - | - | - |
 | `bigIncrements()` | `bigIncrements` | `integer` | - |
-| `bigInteger()` | `bigInteger` | `integer` | `numeric` |
+| `bigInteger()` | `bigInteger` | `integer` | `integer` |
 | `binary()` | `binary` | - | - |
 | `boolean()` | `boolean` | `boolean` | `boolean` |
 | `char($size = null)` | `char` | - | - |
@@ -133,7 +133,7 @@ These are Laravel types that are currently supported.
 | `geometry()` | `geometry` | - | - |
 | `geometryCollection()` | `geometryCollection` | - | - |
 | `increments()` | `increments` | `integer` | - |
-| `integer()` | `integer` | `integer` | `numeric` |
+| `integer()` | `integer` | `integer` | `integer` |
 | `ipAddress()` | `ipAddress` | - | `ip` |
 | `json()` | `json` | `array` | `array` |
 | `jsonb()` | `jsonb` | `array` | `array` |
@@ -141,7 +141,7 @@ These are Laravel types that are currently supported.
 | `longText()` | `longText` | - | - |
 | `macAddress()` | `macAddress` | - | - |
 | `mediumIncrements()` | `mediumIncrements` | `integer` | - |
-| `mediumInteger()` | `mediumInteger` | `integer` | `numeric` |
+| `mediumInteger()` | `mediumInteger` | `integer` | `integer` |
 | `mediumText()` | `mediumText` | - | - |
 | `multiLineString()` | `multiLineString` | - | - |
 | `multiPoint()` | `multiPoint` | - | - |
@@ -149,7 +149,7 @@ These are Laravel types that are currently supported.
 | `point()` | `point` | - | - |
 | `polygon()` | `polygon` | - | - |
 | `smallIncrements()` | `smallIncrements` | `integer` | - |
-| `smallInteger()` | `smallInteger` | `integer` | `numeric` |
+| `smallInteger()` | `smallInteger` | `integer` | `integer` |
 | `softDeletes()` | `softDeletes` | `datetime` | - |
 | `softDeletesTz()` | `softDeletesTz` | `datetime` | - |
 | `string($size = null)` | `string` | - | - |
@@ -159,15 +159,15 @@ These are Laravel types that are currently supported.
 | `timestamp()` | `timestamp` |  `datetime` | - |
 | `timestampTz()` | `timestampTz` | `datetime` | - |
 | `tinyIncrements()` | `tinyIncrements` | `integer` | - |
-| `tinyInteger()` | `tinyInteger` | `integer` | `numeric` |
-| `unsignedBigInteger()` | `unsignedBigInteger` | `integer` | `numeric` |
+| `tinyInteger()` | `tinyInteger` | `integer` | `integer` |
+| `unsignedBigInteger()` | `unsignedBigInteger` | `integer` | `integer` |
 | `unsignedDecimal($total, $decimal)` | `unsignedDecimal` | `double` | `numeric` |
-| `unsignedInteger()` | `unsignedInteger` | `integer` | `numeric` |
-| `unsignedMediumInteger()` | `unsignedMediumInteger` | `integer` | `numeric` |
-| `unsignedSmallInteger()` | `unsignedSmallInteger` | `integer` | `numeric` |
-| `unsignedTinyInteger()` | `unsignedTinyInteger` | `integer` | `numeric` |
+| `unsignedInteger()` | `unsignedInteger` | `integer` | `integer` |
+| `unsignedMediumInteger()` | `unsignedMediumInteger` | `integer` | `integer` |
+| `unsignedSmallInteger()` | `unsignedSmallInteger` | `integer` | `integer` |
+| `unsignedTinyInteger()` | `unsignedTinyInteger` | `integer` | `integer` |
 | `uuid()` | `uuid` | - | - |
-| `year()` | `year` | `integer` | `numeric` |
+| `year()` | `year` | `integer` | `integer` |
 
 Here are some custom types just as an example of what can be done.
 
