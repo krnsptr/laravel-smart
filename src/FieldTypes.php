@@ -26,22 +26,23 @@ trait FieldTypes
 
     public function char($size = null)
     {
-        return $this->type('char', $size ? [$size] : []);
+        return $this->type('char', $size ? [$size] : [])
+            ->rule('string' . ($size ? "|max:$size" : ''));
     }
 
     public function date()
     {
-        return $this->type('date')->cast('date');
+        return $this->type('date')->cast('date')->rule;
     }
 
     public function dateTime()
     {
-        return $this->type('dateTime')->cast('datetime');
+        return $this->type('dateTime')->cast('datetime')->rule;
     }
 
     public function dateTimeTz()
     {
-        return $this->type('dateTimeTz')->cast('datetime');
+        return $this->type('dateTimeTz')->cast('datetime')->rule;
     }
 
     public function decimal($total, $decimal)
@@ -181,7 +182,8 @@ trait FieldTypes
 
     public function string($size = null)
     {
-        return $this->type('string', $size ? [$size] : []);
+        return $this->type('string', $size ? [$size] : [])
+            ->rule('string' . ($size ? "|max:$size" : ''));
     }
 
     public function text()

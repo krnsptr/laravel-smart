@@ -122,7 +122,7 @@ These are Laravel types that are currently supported.
 | `bigInteger()` | `bigInteger` | `integer` | `integer` |
 | `binary()` | `binary` | - | - |
 | `boolean()` | `boolean` | `boolean` | `boolean` |
-| `char($size = null)` | `char` | - | - |
+| `char($size = null)` | `char` | - | `string\|max:$size` |
 | `date()` | `date` | `date` | - |
 | `dateTime()` | `dateTime` | `datetime` | - |
 | `dateTimeTz()` | `dateTimeTz` | `datetime` | - |
@@ -152,7 +152,7 @@ These are Laravel types that are currently supported.
 | `smallInteger()` | `smallInteger` | `integer` | `integer` |
 | `softDeletes()` | `softDeletes` | `datetime` | - |
 | `softDeletesTz()` | `softDeletesTz` | `datetime` | - |
-| `string($size = null)` | `string` | - | - |
+| `string($size = null)` | `string` | - | `string\|max:$size` |
 | `text()` | `text` | - | - |
 | `time()` | `time` | - | - |
 | `timeTz()` | `timeTz` | - | - |
