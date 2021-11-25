@@ -2,6 +2,7 @@
 
 namespace Deiucanta\Smart;
 
+use Closure;
 use Exception;
 use Illuminate\Validation\Rule;
 
