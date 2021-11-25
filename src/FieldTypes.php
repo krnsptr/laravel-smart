@@ -231,7 +231,7 @@ trait FieldTypes
 
     public function unsignedBigInteger()
     {
-        return $this->type('unsignedBigInteger')->cast('integer')->rule('integer');
+        return $this->type('unsignedBigInteger')->cast('integer')->rule('integer|min:0');
     }
 
     public function unsignedDecimal($total, $decimal)
@@ -241,22 +241,22 @@ trait FieldTypes
 
     public function unsignedInteger()
     {
-        return $this->type('unsignedInteger')->cast('integer')->rule('integer');
+        return $this->type('unsignedInteger')->cast('integer')->rule('integer|min:0');
     }
 
     public function unsignedMediumInteger()
     {
-        return $this->type('unsignedMediumInteger')->cast('integer')->rule('integer');
+        return $this->type('unsignedMediumInteger')->cast('integer')->rule('integer|min:0');
     }
 
     public function unsignedSmallInteger()
     {
-        return $this->type('unsignedSmallInteger')->cast('integer')->rule('integer');
+        return $this->type('unsignedSmallInteger')->cast('integer')->rule('integer|min:0');
     }
 
     public function unsignedTinyInteger()
     {
-        return $this->type('unsignedTinyInteger')->cast('integer')->rule('integer');
+        return $this->type('unsignedTinyInteger')->cast('integer')->rule('integer|min:0');
     }
 
     public function uuid()

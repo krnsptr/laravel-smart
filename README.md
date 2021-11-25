@@ -160,12 +160,12 @@ These are Laravel types that are currently supported.
 | `timestampTz()` | `timestampTz` | `datetime` | - |
 | `tinyIncrements()` | `tinyIncrements` | `integer` | - |
 | `tinyInteger()` | `tinyInteger` | `integer` | `integer` |
-| `unsignedBigInteger()` | `unsignedBigInteger` | `integer` | `integer` |
+| `unsignedBigInteger()` | `unsignedBigInteger` | `integer` | `integer|min:0` |
 | `unsignedDecimal($total, $decimal)` | `unsignedDecimal` | `double` | `numeric` |
-| `unsignedInteger()` | `unsignedInteger` | `integer` | `integer` |
-| `unsignedMediumInteger()` | `unsignedMediumInteger` | `integer` | `integer` |
-| `unsignedSmallInteger()` | `unsignedSmallInteger` | `integer` | `integer` |
-| `unsignedTinyInteger()` | `unsignedTinyInteger` | `integer` | `integer` |
+| `unsignedInteger()` | `unsignedInteger` | `integer` | `integer|min:0` |
+| `unsignedMediumInteger()` | `unsignedMediumInteger` | `integer` | `integer|min:0` |
+| `unsignedSmallInteger()` | `unsignedSmallInteger` | `integer` | `integer|min:0` |
+| `unsignedTinyInteger()` | `unsignedTinyInteger` | `integer` | `integer|min:0` |
 | `uuid()` | `uuid` | - | - |
 | `year()` | `year` | `integer` | `integer` |
 
