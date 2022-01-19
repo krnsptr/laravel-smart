@@ -214,7 +214,7 @@ class Field
 
     protected function makeUniqueRule($model)
     {
-        $rule = Rule::unique($model->getTable(), $this->name);
+        $rule = Rule::unique($model->getConnectionName() . '.' . $model->getTable(), $this->name);
 
         if ($model->getKey()) {
             $rule->ignore($model->getKey(), $model->getKeyName());
