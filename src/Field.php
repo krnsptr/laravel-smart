@@ -68,7 +68,11 @@ class Field
 
     public function rule($rule)
     {
-        $this->rules[] = $rule;
+        $rules = is_string($rule) ? explode('|', $rule) : [$rule];
+
+        foreach ($rules as $rule) {
+            $this->rules[] = $rule;
+        }
 
         return $this;
     }
