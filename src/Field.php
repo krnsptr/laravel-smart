@@ -4,6 +4,7 @@ namespace Deiucanta\Smart;
 
 use Closure;
 use Exception;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 
 class Field
@@ -68,7 +69,11 @@ class Field
 
     public function rule($rule)
     {
-        $rules = is_string($rule) ? explode('|', $rule) : [$rule];
+        if (is_string($rule) && !Str::contains($rule, 'regex:')) {
+            $rule = explode('|', $rule);
+        }
+
+        $rules = is_array($rule) ? $rule : [$rule];
 
         foreach ($rules as $rule) {
             $this->rules[] = $rule;
