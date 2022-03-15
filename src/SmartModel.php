@@ -98,6 +98,10 @@ trait SmartModel
             if ($field->default !== null) {
                 $this->setAttribute($field->name, $field->default);
             }
+
+            if ($field->rawDefault !== null) {
+                $this->attributes[$field->name] = $field->rawDefault;
+            }
         }
     }
 
