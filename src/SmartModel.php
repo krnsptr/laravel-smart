@@ -153,7 +153,7 @@ trait SmartModel
 
             $values[$key] = isset($this->rawAttributes[$key])
                 ? $this->rawAttributes[$key]
-                : $this->getAttribute($key);
+                : $this->attributes[$key] ?? null;
 
             $labels[$key] = isset($field->label) ? $field->label : $key;
         }
