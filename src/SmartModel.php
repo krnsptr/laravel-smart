@@ -15,10 +15,6 @@ trait SmartModel
     protected static function bootSmartModel()
     {
         static::saving(function ($model) {
-            $model->removeUnknownAttributes();
-        });
-
-        static::saving(function ($model) {
             $validator = $model->validate();
 
             if ($validator->fails()) {
