@@ -32,12 +32,12 @@ trait FieldTypes
 
     public function date()
     {
-        return $this->type('date')->cast('date')->rule('date');
+        return $this->type('date')->cast('date:Y-m-d')->rule('date');
     }
 
     public function dateTime()
     {
-        return $this->type('dateTime')->cast('datetime')->rule('date');
+        return $this->type('dateTime')->cast('datetime:Y-m-d H:i:s')->rule('date');
     }
 
     public function dateTimeTz()
