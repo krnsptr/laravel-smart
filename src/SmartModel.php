@@ -48,8 +48,8 @@ trait SmartModel
 
     public function getSmartFields()
     {
-        $table = $this->getTable();
-        if (!isset(static::$smartFields[$table])) {
+        $fqcn = static::class;
+        if (!isset(static::$smartFields[$fqcn])) {
             $fields = collect();
 
             foreach ($this->fields() as $field) {
@@ -60,10 +60,10 @@ trait SmartModel
                 $fields->put($field->name, $field);
             }
 
-            static::$smartFields[$table] = $fields;
+            static::$smartFields[$fqcn] = $fields;
         }
 
-        return static::$smartFields[$table];
+        return static::$smartFields[$fqcn];
     }
 
     protected function initSmartFields()
